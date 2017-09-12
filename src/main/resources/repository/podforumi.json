@@ -1,0 +1,18 @@
+{
+  "9gkdu0aniu13v": {
+    "id": "9gkdu0aniu13v",
+    "naziv": "Podforum1",
+    "opis": "Opis Podforuma1",
+    "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+    "odgovorniModerator": {
+      "username": "admin",
+      "password": "pass",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "123123",
+      "email": "admin@a.com",
+      "datumRegistracije": "12/11/2017"
+    }
+  }
+}

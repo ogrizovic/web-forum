@@ -1,0 +1,94 @@
+{
+  "2h9n3bl19vlhv": {
+    "id": "2h9n3bl19vlhv",
+    "parentPodforum": {
+      "id": "9gkdu0aniu13v",
+      "naziv": "Podforum1",
+      "opis": "Opis Podforuma1",
+      "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+      "odgovorniModerator": {
+        "username": "admin",
+        "password": "pass",
+        "ime": "Admin",
+        "prezime": "Adminovic",
+        "uloga": "ADMIN",
+        "telefon": "123123",
+        "email": "admin@a.com",
+        "datumRegistracije": "12/11/2017"
+      }
+    },
+    "naslov": "Tema1",
+    "tipTeme": "TEKST",
+    "autor": {
+      "username": "admin",
+      "password": "pass",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "123123",
+      "email": "admin@a.com",
+      "datumRegistracije": "12/11/2017"
+    },
+    "komentari": [
+      {
+        "id": "jusij0bfnft5",
+        "parentTema": {
+          "id": "2h9n3bl19vlhv",
+          "parentPodforum": {
+            "id": "9gkdu0aniu13v",
+            "naziv": "Podforum1",
+            "opis": "Opis Podforuma1",
+            "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+            "odgovorniModerator": {
+              "username": "admin",
+              "password": "pass",
+              "ime": "Admin",
+              "prezime": "Adminovic",
+              "uloga": "ADMIN",
+              "telefon": "123123",
+              "email": "admin@a.com",
+              "datumRegistracije": "12/11/2017"
+            }
+          },
+          "naslov": "Tema1",
+          "tipTeme": "TEKST",
+          "autor": {
+            "username": "admin",
+            "password": "pass",
+            "ime": "Admin",
+            "prezime": "Adminovic",
+            "uloga": "ADMIN",
+            "telefon": "123123",
+            "email": "admin@a.com",
+            "datumRegistracije": "12/11/2017"
+          },
+          "komentari": [],
+          "sadrzaj": "Sadrzaj teme 1 podforuma 1",
+          "datumKreiranja": "12/27/2017",
+          "likes": 0,
+          "dislikes": 0
+        },
+        "autor": {
+          "username": "admin",
+          "password": "pass",
+          "ime": "Admin",
+          "prezime": "Adminovic",
+          "uloga": "ADMIN",
+          "telefon": "123123",
+          "email": "admin@a.com",
+          "datumRegistracije": "12/11/2017"
+        },
+        "datumKomentara": "12/29/2017",
+        "podkomentari": [],
+        "tekstKomentara": "OVO JE TEKST KOMENTARA!!!",
+        "likes": 0,
+        "dislikes": 0,
+        "izmenjen": false
+      }
+    ],
+    "sadrzaj": "Sadrzaj teme 1 podforuma 1",
+    "datumKreiranja": "12/27/2017",
+    "likes": 0,
+    "dislikes": 0
+  }
+}

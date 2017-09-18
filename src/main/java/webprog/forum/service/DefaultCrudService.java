@@ -35,8 +35,8 @@ public abstract class DefaultCrudService<T extends IDInterface> implements CrudS
 	}
 
 	@Override
-	public T edit(T obj) {
-		repo.update(obj);
+	public T edit(T obj, String id) {
+		repo.update(obj, id);
 		return repo.readOne(obj);
 	}
 

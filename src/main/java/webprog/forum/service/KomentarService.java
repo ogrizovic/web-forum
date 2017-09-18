@@ -14,4 +14,12 @@ public class KomentarService extends DefaultCrudService<Komentar> {
 	public Map<String, Komentar> getKomentariTeme(String temaId) {
 		return ((KomentarRepo) getRepo()).getAllForTema(temaId);
 	}
+	
+	public void removeKomentariTeme(String temaId) {
+		((KomentarRepo) getRepo()).removeAllForTema(temaId);
+	}
+	
+	public void removePodkomentari(String komentarId) {
+		((KomentarRepo) getRepo()).removeAllForKomentar(komentarId);
+	}
 }

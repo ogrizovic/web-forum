@@ -14,13 +14,34 @@ public class Komentar implements IDInterface {
 	private User autor;
 	private String datumKomentara;
 	private Komentar parentKomentar;
-	private List<Komentar> podkomentari;
+	private List<String> podkomentari;
 	private String tekstKomentara;
 	private int likes;
 	private int dislikes;
 	private boolean izmenjen;
+	private boolean obrisan;
+	private List<String> votes;
 	
+
 	public Komentar() {
+	}
+	
+	
+
+	public List<String> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(List<String> votes) {
+		this.votes = votes;
+	}
+
+	public boolean isObrisan() {
+		return obrisan;
+	}
+
+	public void setObrisan(boolean obrisan) {
+		this.obrisan = obrisan;
 	}
 
 	public Tema getParentTema() {
@@ -58,7 +79,7 @@ public class Komentar implements IDInterface {
 	}
 	
 	public void setDatumKomentaraNow() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		this.datumKomentara = dateFormat.format(date);
 	}
@@ -71,11 +92,11 @@ public class Komentar implements IDInterface {
 		this.parentKomentar = parentKomentar;
 	}
 
-	public List<Komentar> getPodkomentari() {
+	public List<String> getPodkomentari() {
 		return podkomentari;
 	}
 
-	public void setPodkomentari(ArrayList<Komentar> podkomentari) {
+	public void setPodkomentari(ArrayList<String> podkomentari) {
 		this.podkomentari = podkomentari;
 	}
 

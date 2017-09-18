@@ -5,10 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,9 +47,22 @@ public abstract class DefaultCrudRepo<T extends IDInterface> implements CrudRepo
 	}
 
 	public String getNewId() {
-		Random rnd = new SecureRandom();
-		String id = new BigInteger(64, rnd).toString(32);
-		return id;
+		readAll();
+		Collection<T> list = getObjectsMap().values();
+		Collection<Integer> ids = new ArrayList<>();
+		for (T t : list) {
+			ids.add(Integer.parseInt(t.getId()));
+		}
+		int id;
+		if (ids.size() > 0) {
+			id = Collections.max(ids);
+		}
+		else {
+			id = 0;
+		}
+//		Random rnd = new SecureRandom();
+//		String id = new BigInteger(64, rnd).toString(32);
+		return String.valueOf(id + 1);
 	}
 
 	@Override
@@ -81,9 +94,9 @@ public abstract class DefaultCrudRepo<T extends IDInterface> implements CrudRepo
 
 
 	@Override
-	public void update(T obj) {
+	public void update(T obj, String id) {
 		readAll();
-		getObjectsMap().put(obj.getId(), obj);
+		getObjectsMap().put(id, obj);
 		saveMap(getPath());
 	}
 

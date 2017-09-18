@@ -1,8 +1,10 @@
 package webprog.forum.controller;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,9 +23,13 @@ import javax.ws.rs.core.Response.Status;
 
 import webprog.forum.auth.Role;
 import webprog.forum.auth.Secured;
+import webprog.forum.model.Komentar;
 import webprog.forum.model.Podforum;
+import webprog.forum.model.Tema;
 import webprog.forum.model.User;
+import webprog.forum.service.KomentarService;
 import webprog.forum.service.PodforumService;
+import webprog.forum.service.TemaService;
 import webprog.forum.service.UserService;
 
 @Path("podforumi")
@@ -31,14 +37,31 @@ public class PodforumCtrl {
 
 	private PodforumService service;
 	private UserService userService;
+	private TemaService temaService;
+	private KomentarService komentarService;
 	
 	public PodforumCtrl() {
 		this.service = new PodforumService();
 		this.userService = new UserService();
+		this.temaService = new TemaService();
+		this.komentarService = new KomentarService();
 	}
 	
+	@Secured
 	@GET
-	@Produces
+	@Path("{id}/prati")
+	public void prati(@Context SecurityContext securityContext, 
+			@PathParam(value="id") String id) {
+		
+		String username = securityContext.getUserPrincipal().getName();
+		User user = userService.getOneById(username);
+		
+		user.getPraceniPodforumi().add(id);
+	}
+	
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
 		Collection<Podforum> allPodforumi = service.getAll().values();
 		GenericEntity<Collection<Podforum>> list = new GenericEntity<Collection<Podforum>>(allPodforumi) {};
@@ -81,17 +104,32 @@ public class PodforumCtrl {
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	
+	
 	@Secured({Role.ADMIN, Role.MODERATOR})
 	@PUT
+	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(Podforum podforum) {
-		Podforum tmp = service.getOneById(podforum.getId());
+	public Response edit(@PathParam(value="id") String id, Podforum podforum) {
+		Podforum tmp = service.getOneById(id);
 		if (tmp == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		tmp = service.edit(podforum);
-		return Response.ok(tmp).build();
+		tmp.setNaziv(podforum.getNaziv());
+		tmp.setOpis(podforum.getOpis());
+		tmp.setPravila(podforum.getPravila());
+		
+		service.edit(tmp, tmp.getId());
+		
+		URI resourceUri = null;
+		try {
+			resourceUri = new URI("podforumi/" + podforum.getId());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return Response.created(resourceUri).entity(tmp).build();
+		
+//		return Response.ok(tmp).build();
 	}
 	
 	@Secured({Role.ADMIN, Role.MODERATOR})
@@ -108,6 +146,17 @@ public class PodforumCtrl {
 		Podforum tmp = service.getOneById(id);
 		if (tmp != null) {
 			if (isAdmin || username.equals(tmp.getOdgovorniModerator().getUsername())) {
+				
+				// Kaskadno brisanje
+				Map<String, Tema> temePodforuma = temaService.getTemePodforuma(id);
+				for (Map.Entry<String, Tema> entry : temePodforuma.entrySet()) {
+					Map<String, Komentar> komentariTeme = komentarService.getKomentariTeme(entry.getValue().getId());
+						for (Map.Entry<String, Komentar> entr : komentariTeme.entrySet()) {
+							komentarService.removePodkomentari(entr.getValue().getId());
+						}
+					komentarService.removeKomentariTeme(entry.getValue().getId());
+				}
+				temaService.removeTemePodforuma(id);
 				service.remove(id);
 				return Response.ok().build();
 			}

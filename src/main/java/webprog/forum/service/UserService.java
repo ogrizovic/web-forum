@@ -36,8 +36,8 @@ public class UserService implements CrudService<User>{
 	}
 
 	@Override
-	public User edit(User obj) {
-		repo.update(obj);
+	public User edit(User obj, String id) {
+		repo.update(obj, id);
 		return repo.readOne(obj);
 	}
 

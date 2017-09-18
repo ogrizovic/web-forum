@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="/forum/js/jquery-3.2.1.min.js"></script>
+<title>Profil</title>
+</head>
+<body>
+	<h2 id="naslov"></h2>
+	<a href="http://localhost:8080/forum">Pocetna</a>
+	<h3>Podaci</h3>
+	<ul id="podaci"></ul>
+	<h3>Praceni podforumi</h3>
+	<ul id="praceni-podforumi"></ul>
+	<h3>Teme</h3>
+	<ul id="teme"></ul>
+	<h3>Komentari</h3>
+	<ul id="komentari"></ul>
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	var ime, prezime, telefon, email, datumRegistracije,praceniPodforumi, teme, komentari;
+	var username = sessionStorage.getItem("username");
+
+	loadPodaci();
+
+	function loadPodaci(){
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type: "GET",
+			url: "http://localhost:8080/forum/webapi/users/" + username,
+			dataType: "json"
+		})
+		.done(function(data, status){
+			$("#naslov").append("Profil korisnika: " + data.username);
+			$("#podaci").append("<li>Ime i prezime: " + data.ime + " " + data.prezime + "</li><li>Tel: " + data.telefon + "</li><li>Email: " + data.email + "</li><li>Registrovan: " + data.datumRegistracije + "</li>");
+			for (var i = data.praceniPodforumi.length - 1; i >= 0; i--) {
+				$("#praceni-podforumi").append("<li>" + data.praceniPodforumi[i].naziv + "</li>");
+			}
+			for (var i = data.teme.length - 1; i >= 0; i--) {
+				$("#teme").append("<li>" + data.teme[i].parentPodforum.naziv + " - " + data.teme[i].naslov + "</li>");
+			}
+			for (var i = data.komentari.length - 1; i >= 0; i--) {
+				var parent;
+				// if (data.komentari[i].parentKomentar){
+				// 	for (var j = data.komentari[i].podkomentari.length - 1; j >= 0; j--) {
+						
+				// 		$("#komentari").append("<li>" + data.komentari[i].parentKomentar + " - " + data.komentari[i].podkomentari[j].tekstKomentara + "</li>");	
+				// 	}
+				// 	$("#komentari").append("<li>" + data.komentari[i].tekstKomentara + " - " + data.komentari[i].tekstKomentara + "</li>");	
+				// }
+				$("#komentari").append("<li>" + data.komentari[i].parentTema.naslov + " - " + data.komentari[i].tekstKomentara + "</li>");
+			}
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	}
+});
+</script>
+</html>

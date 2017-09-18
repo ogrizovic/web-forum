@@ -15,4 +15,8 @@ public class TemaService extends DefaultCrudService<Tema> {
 	public Map<String, Tema> getTemePodforuma(String podforumId) {
 		return ((TemaRepo) getRepo()).getAllForPodforum(podforumId);
 	}
+	
+	public void removeTemePodforuma(String podforumId) {
+		((TemaRepo) getRepo()).deleteAllForPodforum(podforumId);
+	}
 }

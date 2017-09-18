@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +25,7 @@ import webprog.forum.auth.Secured;
 import webprog.forum.model.Komentar;
 import webprog.forum.model.Tema;
 import webprog.forum.model.User;
+import webprog.forum.service.KomentarService;
 import webprog.forum.service.PodforumService;
 import webprog.forum.service.TemaService;
 import webprog.forum.service.UserService;
@@ -34,11 +36,30 @@ public class TemaCtrl {
 	private TemaService service;
 	private PodforumService podforumService;
 	private UserService userService;
+	private KomentarService komentarService;
 	
 	public TemaCtrl() {
 		this.service = new TemaService();
 		this.podforumService = new PodforumService();
 		this.userService = new UserService();
+		this.komentarService = new KomentarService();
+	}
+	
+	@Secured
+	@GET
+	@Path("{id}/vote/")
+	public void like(@Context SecurityContext securityContext, 
+			@PathParam(value="id") String id, @QueryParam("v") String vote) {
+		Tema tema = service.getOneById(id);
+		String username = securityContext.getUserPrincipal().getName();
+		if (!tema.getVotes().contains(username)) {
+			if(vote.equals("like")) {
+				tema.incrementLikes();
+			}
+			else tema.incrementDislikes();
+			tema.getVotes().add(username);
+		}
+		service.edit(tema, tema.getId());
 	}
 	
 	// Vraca sve teme podforuma
@@ -71,12 +92,17 @@ public class TemaCtrl {
 		
 		tema.setId(service.getRepo().getNewId());
 		tema.setParentPodforum(podforumService.getOneById(podforumId));
-		tema.setAutor(userService.getOneById(username));
+//		tema.setAutor(userService.getOneById(username));
+		tema.setAutor(username);
 		tema.setDatumKreiranjaNow();
 		tema.setLikes(0);
 		tema.setDislikes(0);
-		tema.setKomentari(new ArrayList<Komentar>());
+		tema.setKomentari(new ArrayList<String>());
+		tema.setVotes(new ArrayList<String>());
 		
+		User autor = (userService.getOneById(username));
+		autor.getTeme().add(tema);
+		userService.edit(autor, autor.getId());
 		service.add(tema);
 		return Response.ok(service.getOneById(tema.getId())).build();
 	}
@@ -94,27 +120,31 @@ public class TemaCtrl {
 	
 	@Secured({Role.USER, Role.ADMIN, Role.MODERATOR})
 	@PUT
+	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(@Context SecurityContext securityContext, Tema tema) {
+	public Response edit(@PathParam(value = "id") String id, 
+			@Context SecurityContext securityContext, Tema tema) {
 		//  autori, odg MOD i ADMIN
 		
 		String username = securityContext.getUserPrincipal().getName();
 		User user = userService.getOneById(username);
 		boolean isAdmin = (user.getUloga() == Role.ADMIN);
 		
-		if (username.equals(tema.getAutor().getUsername()) || 
-				username.equals(tema.getParentPodforum().getOdgovorniModerator().getUsername()) || 
-				isAdmin) {
-			
-			Tema tmp = service.getOneById(tema.getId());
-			if (tmp == null) {
-				return Response.status(Status.NOT_FOUND).build();
+		Tema tmp = service.getOneById(id);
+		if (tmp != null) {
+			if (username.equals(tema.getAutor()) || 
+					username.equals(tema.getParentPodforum().getOdgovorniModerator().getUsername()) || 
+					isAdmin) {
+				tmp.setNaslov(tema.getNaslov());
+				tmp.setSadrzaj(tema.getSadrzaj());
+				service.edit(tmp, tmp.getId());
+				return Response.ok(tmp).build();
 			}
-			tmp = service.edit(tema);
-			return Response.ok(tmp).build();
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		return Response.status(Status.UNAUTHORIZED).build();
+		return Response.status(Status.NOT_FOUND).build();
+		
 	}
 	
 	@Secured({Role.USER, Role.ADMIN, Role.MODERATOR})
@@ -132,9 +162,16 @@ public class TemaCtrl {
 		
 		Tema tmp = service.getOneById(id);
 		if (tmp != null) {
-			if (username.equals(tmp.getAutor().getUsername()) || 
+			if (username.equals(tmp.getAutor()) || 
 					username.equals(tmp.getParentPodforum().getOdgovorniModerator().getUsername()) || 
 					isAdmin) {
+				
+				Map<String, Komentar> komentariTeme = komentarService.getKomentariTeme(id);
+				for (Map.Entry<String, Komentar> entr : komentariTeme.entrySet()) {
+					komentarService.removePodkomentari(entr.getValue().getId());
+				}
+				komentarService.removeKomentariTeme(id);
+				
 				service.remove(id);
 				return Response.ok().build();
 			}

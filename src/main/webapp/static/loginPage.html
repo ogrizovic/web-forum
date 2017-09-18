@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<script src="/forum/js/jquery-3.2.1.min.js"></script>
+<title>Login page</title>
+</head>
+<body>
+<p>User login. </p>
+<form id="formLogin" >
+<table>
+	<tr>
+		<td>username:</td> 
+		<td><input id="username" name="username" /></td>
+		<td><span id="error-username" style="color:red"></span></td>
+	</tr>
+	<tr>
+		<td>password:</td> 
+		<td><input id="password" name="password" type="password" /></td>
+		<td><span id="error-password" style="color:red"></span></td>
+	</tr>	
+	<tr>
+		<td><input type="submit" id="btnSubmit" value="Login" /></td>
+	</tr>
+</table>
+</form>
+<p>You don't have account yet? 
+	<a href="registerPage.html" >Register</a>
+</p>
+<br>
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$("#formLogin").on("submit", function(e){
+		e.preventDefault();
+
+		var data = {
+			"username": $("#username").val(),
+			"password": $("#password").val()
+		}
+		var jsonData = JSON.stringify(data);
+
+		$.ajax({
+			headers:{
+				'Content-Type': 'application/json'
+			},
+			type: 'POST',
+			url: 'http://localhost:8080/forum/webapi/authentication',
+			dataType: 'text',
+			data: jsonData
+		})
+		.done(function(data, status){
+			if (status == "success") {
+				var tosplit = data.substring(1, data.length - 1);
+				var splitted = tosplit.split(" ");
+				sessionStorage.setItem('username', splitted[0]);
+				sessionStorage.setItem('token', splitted[1]);
+				sessionStorage.setItem('role', splitted[2]);
+				location.href = "http://localhost:8080/forum";
+			}
+		})
+		.fail(function(jqXHR, textStatus, erroThrown){
+			if (jqXHR.status == 404) {
+				alert("Username i/ili Password ne postoje.")
+			}
+		});
+
+		// console.log(sessionStorage.getItem('token'));
+	});
+
+});
+
+</script>
+</html>

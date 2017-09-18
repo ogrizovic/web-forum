@@ -1,0 +1,37 @@
+table:not(.modal-table) {
+	width: 500px;
+	border-collapse: collapse;
+    border: 1px solid black;
+}
+
+table:not(.table-teme-class) tr:nth-child(4n+1), table:not(.table-teme-class) tr:nth-child(4n) {
+	background: #e6e6e6;
+}
+
+.prazna-tabela {
+		display: none;
+}
+
+#table-komentari {
+	width: 450px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+.hide {
+	display: none;
+}
+
+.selected {
+		background-color: orange;
+}
+
+body {
+    color: #0d0d0d;
+    font: 16px/1.5em "Lucida Grande",Arial,sans-serif;
+    margin: 20px;
+    width: auto !important;
+}

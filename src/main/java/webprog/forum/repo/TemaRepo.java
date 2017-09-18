@@ -54,6 +54,18 @@ public class TemaRepo extends DefaultCrudRepo<Tema> {
 		return temePodforuma;
 	}
 	
+	public void deleteAllForPodforum(String podforumId) {
+		readAll();
+		Map<String, Tema> preostaleTemePodforuma = new HashMap<>();
+		for (Map.Entry<String, Tema> entry : getObjectsMap().entrySet()) {
+			if (!entry.getValue().getParentPodforum().getId().equals(podforumId)) {
+				preostaleTemePodforuma.put(entry.getValue().getNaslov(), entry.getValue());
+			}
+		}
+		setObjectsMap(preostaleTemePodforuma);
+		saveMap(getPath());
+	}
+	
 	
 	
 	

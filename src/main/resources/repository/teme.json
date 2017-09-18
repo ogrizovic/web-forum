@@ -1,94 +1,101 @@
 {
-  "2h9n3bl19vlhv": {
-    "id": "2h9n3bl19vlhv",
+  "2": {
+    "id": "2",
     "parentPodforum": {
-      "id": "9gkdu0aniu13v",
-      "naziv": "Podforum1",
-      "opis": "Opis Podforuma1",
+      "id": "1",
+      "naziv": "Podforum 123",
+      "opis": "Opis Podforuma 1",
       "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
       "odgovorniModerator": {
         "username": "admin",
-        "password": "pass",
+        "password": "a",
         "ime": "Admin",
         "prezime": "Adminovic",
         "uloga": "ADMIN",
         "telefon": "123123",
         "email": "admin@a.com",
-        "datumRegistracije": "12/11/2017"
+        "datumRegistracije": "17/34/2017",
+        "praceniPodforumi": [],
+        "teme": [],
+        "komentari": []
       }
     },
-    "naslov": "Tema1",
+    "naslov": "Tema2",
     "tipTeme": "TEKST",
-    "autor": {
-      "username": "admin",
-      "password": "pass",
-      "ime": "Admin",
-      "prezime": "Adminovic",
-      "uloga": "ADMIN",
-      "telefon": "123123",
-      "email": "admin@a.com",
-      "datumRegistracije": "12/11/2017"
-    },
+    "autor": "admin",
     "komentari": [
-      {
-        "id": "jusij0bfnft5",
-        "parentTema": {
-          "id": "2h9n3bl19vlhv",
-          "parentPodforum": {
-            "id": "9gkdu0aniu13v",
-            "naziv": "Podforum1",
-            "opis": "Opis Podforuma1",
-            "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
-            "odgovorniModerator": {
-              "username": "admin",
-              "password": "pass",
-              "ime": "Admin",
-              "prezime": "Adminovic",
-              "uloga": "ADMIN",
-              "telefon": "123123",
-              "email": "admin@a.com",
-              "datumRegistracije": "12/11/2017"
-            }
-          },
-          "naslov": "Tema1",
-          "tipTeme": "TEKST",
-          "autor": {
-            "username": "admin",
-            "password": "pass",
-            "ime": "Admin",
-            "prezime": "Adminovic",
-            "uloga": "ADMIN",
-            "telefon": "123123",
-            "email": "admin@a.com",
-            "datumRegistracije": "12/11/2017"
-          },
-          "komentari": [],
-          "sadrzaj": "Sadrzaj teme 1 podforuma 1",
-          "datumKreiranja": "12/27/2017",
-          "likes": 0,
-          "dislikes": 0
-        },
-        "autor": {
-          "username": "admin",
-          "password": "pass",
-          "ime": "Admin",
-          "prezime": "Adminovic",
-          "uloga": "ADMIN",
-          "telefon": "123123",
-          "email": "admin@a.com",
-          "datumRegistracije": "12/11/2017"
-        },
-        "datumKomentara": "12/29/2017",
-        "podkomentari": [],
-        "tekstKomentara": "OVO JE TEKST KOMENTARA!!!",
-        "likes": 0,
-        "dislikes": 0,
-        "izmenjen": false
-      }
+      "7"
     ],
-    "sadrzaj": "Sadrzaj teme 1 podforuma 1",
-    "datumKreiranja": "12/27/2017",
-    "likes": 0,
-    "dislikes": 0
+    "sadrzaj": "Ovo je sadrzaj teme",
+    "datumKreiranja": "18/09/2017",
+    "likes": 1,
+    "dislikes": 1,
+    "votes": [
+      "admin"
+    ]
+  },
+  "3": {
+    "id": "3",
+    "parentPodforum": {
+      "id": "1",
+      "naziv": "Podforum 123",
+      "opis": "Opis Podforuma 1",
+      "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+      "odgovorniModerator": {
+        "username": "admin",
+        "password": "a",
+        "ime": "Admin",
+        "prezime": "Adminovic",
+        "uloga": "ADMIN",
+        "telefon": "123123",
+        "email": "admin@a.com",
+        "datumRegistracije": "17/34/2017",
+        "praceniPodforumi": [],
+        "teme": [],
+        "komentari": []
+      }
+    },
+    "naslov": "Temica",
+    "tipTeme": "TEKST",
+    "autor": "admin",
+    "komentari": [],
+    "sadrzaj": "Tekstte\ntemice\nu vise\nrevova",
+    "datumKreiranja": "18/09/2017",
+    "likes": 2,
+    "dislikes": 1,
+    "votes": [
+      "admin"
+    ]
+  },
+  "4": {
+    "id": "4",
+    "parentPodforum": {
+      "id": "1",
+      "naziv": "Podforum 123",
+      "opis": "Opis Podforuma 1",
+      "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+      "odgovorniModerator": {
+        "username": "admin",
+        "password": "a",
+        "ime": "Admin",
+        "prezime": "Adminovic",
+        "uloga": "ADMIN",
+        "telefon": "123123",
+        "email": "admin@a.com",
+        "datumRegistracije": "17/34/2017",
+        "praceniPodforumi": [],
+        "teme": [],
+        "komentari": []
+      }
+    },
+    "naslov": "Test tema",
+    "tipTeme": "TEKST",
+    "autor": "admin",
+    "komentari": [],
+    "sadrzaj": "lajdlksfj\n",
+    "datumKreiranja": "19/09/2017",
+    "likes": 2,
+    "dislikes": 0,
+    "votes": []
   }
 }

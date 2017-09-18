@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="/forum/js/jquery-3.2.1.min.js"></script>
+<title>Register page</title>
+</head>
+<body>
+	<h2>Register</h2>
+	<form id="form-register">
+		<table>
+			<tr>
+				<td>Username:</td>
+				<td><input type="text" name="Username" id="username"></td>
+				<td><span id="error-username" style="color:red"></span></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input name="password" id="password" type="password" /> </td>
+				<td><span id="error-password" style="color:red"></span></td>
+			</tr>
+			<tr>
+				<td>Ime:</td>
+				<td><input name="ime" id="ime" type="text"  /></td>
+				<td><span id="error-ime"></span></td>
+			</tr>
+			<tr>
+				<td>Prezime:</td>
+				<td><input name="prezime" id="prezime" type="text"  /> </td>
+				<td><span id="error-prezime"></span></td>
+			</tr>
+			<tr>
+				<td>Telefon:</td>
+				<td><input name="telefon" id="telefon" type="number"  /> </td>
+				<td><span id="error-telefon"></span></td>
+			</tr>
+			<tr>
+				<td>Email:</td> 
+				<td><input name="email" id="email" type="text"  /> </td>
+				<td><span id="error-email"></span></td>
+			</tr>
+		</table>
+		<button id="submit-button" type="submit" >Register</button>
+	</form>
+</body>
+
+<script type="text/javascript">
+	$('#form-register').submit(function(e){
+		e.preventDefault();
+
+		var data = {
+			username: $('#username').val(),
+			password: $('#password').val(),
+			ime: $('#ime').val(),
+			prezime: $('#prezime').val(),
+			telefon: $('#telefon').val(),
+			email: $('#email').val()
+		}
+
+		var jsonData = JSON.stringify(data);
+
+		$.ajax({
+			headers:{
+				'Content-Type':'application/json'
+			},
+			type:'POST',
+			url:'http://localhost:8080/forum/webapi/users/register',
+			dataType:'text',
+			data: jsonData
+
+		})
+		.done(function(data, status){
+			alert("Uspesno ste se registrovali. Nastavite na Login.")
+			location.href = 'http://localhost:8080/forum/static/loginPage.html'
+			console.log(data);
+		})
+		.fail(function(jqXHR, textStatus){
+			if(jqXHR.status == 409) {
+				alert("Username je zauzet, odaberite novi.")
+			}
+			else if (jqXHR.status == 201) {
+				alert("201 jebiga");
+			}
+		});
+	});
+</script>
+
+</html>

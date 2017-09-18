@@ -13,12 +13,13 @@ public class Tema implements IDInterface {
 	private Podforum parentPodforum;
 	private String naslov;	// jedinstven u okviru podforuma
 	private TipTeme tipTeme;
-	private User autor;
-	private List<Komentar> komentari;
+	private String autor;
+	private List<String> komentari;
 	private String sadrzaj; // Da li je string?
 	private String datumKreiranja;
 	private int likes;
 	private int dislikes;
+	private List<String> votes; // oni koji su lajkovali/dislajkovali
 	
 	public Tema() {
 	}
@@ -55,19 +56,27 @@ public class Tema implements IDInterface {
 		this.tipTeme = tipTeme;
 	}
 
-	public User getAutor() {
+//	public User getAutor() {
+//		return autor;
+//	}
+//
+//	public void setAutor(User autor) {
+//		this.autor = autor;
+//	}
+	
+	public String getAutor() {
 		return autor;
 	}
 
-	public void setAutor(User autor) {
+	public void setAutor(String autor) {
 		this.autor = autor;
 	}
-
-	public List<Komentar> getKomentari() {
+	
+	public List<String> getKomentari() {
 		return komentari;
 	}
 
-	public void setKomentari(ArrayList<Komentar> komentari) {
+	public void setKomentari(List<String> komentari) {
 		this.komentari = komentari;
 	}
 
@@ -98,8 +107,10 @@ public class Tema implements IDInterface {
 	}
 	
 	public void setDatumKreiranjaNow() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
+//		ZonedDateTime date = ZonedDateTime.now();
+//		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		this.datumKreiranja = dateFormat.format(date);
 	}
 
@@ -125,6 +136,14 @@ public class Tema implements IDInterface {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public List<String> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(ArrayList<String> arrayList) {
+		this.votes = arrayList;
 	}
 
 	

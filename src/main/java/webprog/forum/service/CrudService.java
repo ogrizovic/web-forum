@@ -8,6 +8,6 @@ public interface CrudService<T> {
 	public T getOne(T obj);
 	public T getOneById(String id);
 	public Map<String, T> getAll();
-	public T edit(T obj);
+	public T edit(T obj, String id);
 	public void remove(String id);
 }

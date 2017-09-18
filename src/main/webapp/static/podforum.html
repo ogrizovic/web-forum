@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="/forum/css/index.css"> -->
+<link rel="stylesheet" href="/forum/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/forum/css/podforum.css">
+<script src="/forum/js/jquery-3.2.1.min.js"></script>
+<script src="/forum/js/bootstrap.min.js"></script>
+<title>Podforum</title>
+</head>
+<body>
+	<ul>
+		<li><a href="/forum/static/index.html">Home</a></li>
+	</ul>
+	<div id="div-sve-teme">
+		<h2 id="header-sve-teme"></h2>
+		<br/>
+		<button type="button" class="user" id="btn-prati">Prati podforum</button>
+		<br/>
+		<table id="table-teme" class="table-teme-class selectable">
+			<tr>
+				<th>Naslov</th>
+				<th>Tip teme</th>
+				<th>Autor</th>
+				<th>Datum kreiranja</th>
+			</tr>
+		</table>
+		<!-- Modal buttons -->
+		<button type="button" class="user" data-toggle="modal" data-target="#modal-nova-tema" id="nova-tema">Nova tema</button>
+		<button type="button" class="user moderator admin hide" data-toggle="modal" data-target="#modal-izmena-tema" id="btn-izmena-tema">Izmena</button>
+		<button type="button" class="user moderator admin hide" data-toggle="modal" data-target="#modal-brisanje-tema" id="btn-brisanje-tema">Brisanje</button>
+	</div>
+	<br>
+	<div id="div-tema" class="prazna-tabela">
+		<table id="table-tema" class="table-tema-class">
+			
+		</table>
+	</div>
+	<br>
+	<div id="div-komentari">
+		<table id="table-komentari" class="table-komentari-class">
+			
+		</table>
+	</div>
+
+<!-- Nova tema modal -->
+<!-- Modal -->
+<div id="modal-nova-tema" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h4 class="modal-title">Nova tema</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+	      <table class="modal-table">
+	        <form id="form-nova-tema">
+	        	<tr>
+	        		<td>
+		        		<label>Naslov:</label>
+		        	</td>
+		        	<td>
+		        		<input type="text" name="naslov" id="nova-naslov">
+		        	</td>
+	        	</tr>
+	        	<tr>
+	        		<td>
+		        		<label>Tip teme:</label>
+		        	</td>
+		        	<td>
+		        		<input type="radio" name="tipTeme" value="TEKST">Tekst<br>
+		        		<input type="radio" name="tipTeme" value="SLIKA">Slika<br>
+		        		<input type="radio" name="tipTeme" value="LINK">Link
+		        	</td>
+	        	</tr>
+	        	<tr>
+	        		<td>
+		        		<label>Sadrzaj:</label>
+		        	</td>
+		        	<td>
+		        		<textarea rows='5' cols='35' name="sadrzaj" id="nova-sadrzaj"></textarea>
+		        	</td>
+	        	</tr>
+	        </form>
+	       </table>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-success" data-dismiss="modal" id="btn-dodaj-tema">Dodaj</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Izmena tema modal-->
+
+<div id="modal-izmena-tema" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h4 class="modal-title">Izmena Teme</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+	      <table class="modal-table">
+	        <form id="form-izmena-tema">
+	        	<tr>
+	        		<td>
+		        		<label>Naslov:</label>
+		        	</td>
+		        	<td>
+		        		<input type="text" name="naslov" id="izmena-naslov">
+		        	</td>
+	        	</tr>
+	        	<tr>
+	        		<td>
+		        		<label>Tip teme:</label>
+		        	</td>
+		        	<td>
+		        		<input type="radio" name="tipTeme" value="TEKST">Tekst<br>
+		        		<input type="radio" name="tipTeme" value="SLIKA">Slika<br>
+		        		<input type="radio" name="tipTeme" value="LINK">Link
+		        	</td>
+	        	</tr>
+	        	<tr>
+	        		<td>
+		        		<label>Sadrzaj:</label>
+		        	</td>
+		        	<td>
+		        		<textarea rows='5' cols='35' name="sadrzaj" id="izmena-sadrzaj"></textarea>
+		        	</td>
+	        	</tr>
+	        </form>
+	       </table>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-success" data-dismiss="modal" id="btn-izmeni-tema">Izmeni</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Izmena tema modal -->
+<!-- Modal -->
+<div id="modal-brisanje-tema" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h4 class="modal-title">Brisanje teme</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+	      <p>Da li ste sigurni?</p>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-success" data-dismiss="modal" id="btn-brisi-tema">Brisi</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+$(document).ready(function(e){
+	var podforumId = location.search.substr(1);
+	var idIzabraneTeme;
+	var idSelektovaneTeme;
+
+	checkIfLoggedIn();
+	loadSveTeme();
+
+	$("body").on("click", ".like-tema", function(e){
+		var idLajkovaneTeme = $(this).parent().parent().siblings(":first").children(":first").text();
+		alert(idIzabraneTeme + ", " + idLajkovaneTeme);
+		$.ajax({
+			headers:{
+				"Authorization": "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idIzabraneTeme + "/vote?v=like",
+			dataType:"json"
+		})
+		.done(function(){
+
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	$("body").on("click", ".dislike-tema", function(e){
+		var idLajkovaneTeme = $(this).parent().parent().siblings(":first").children(":first").text();
+		alert(idIzabraneTeme + ", " + idLajkovaneTeme);
+		$.ajax({
+			headers:{
+				"Authorization": "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idIzabraneTeme + "/vote?v=dislike",
+			dataType:"json"
+		})
+		.done(function(){
+
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	$("#btn-prati").on("click", function(e){
+		$.ajax({
+			headers:{
+				"Authorization": "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/prati",
+			dataType:"json"
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	$("#btn-brisi-tema").on("click", function(e){
+		$.ajax({
+			headers:{
+				"Authorization": "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"DELETE",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idSelektovaneTeme
+		})
+		.done(function(data){
+			loadSveTeme();
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	})
+
+	$("#btn-izmeni-tema").on("click", function(e){
+		var tema = {
+			naslov: $("#nova-naslov").val(),
+			tipTeme: $('input[name=tipTeme]:checked').val(),
+			sadrzaj: $("#nova-sadrzaj").val()
+		}
+
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"PUT",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idSelektovaneTeme,
+			dataType:"json",
+			data: JSON.stringify(tema)
+
+		})
+		.done(function(data){
+			// $("#table-teme").append("<tr><td style='display:none'>" + data.id + "</td><td><a href='#' >" + data.naslov + "</a></td><td>" + data.tipTeme + "</td><td>" + data.autor + "</td><td>" + data.datumKreiranja + "</td></tr>");
+			loadSveTeme();
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	// popunjavanje input polja za izmenu
+	$("#btn-izmena-tema").on("click", function(e){
+		// e.preventDefault();
+		if (idSelektovaneTeme === null || idSelektovaneTeme === undefined){
+			alert("Ni jedna tema nije selektovana.");
+			return;
+		}
+		$.ajax({
+			headers:{
+				"Authorization": "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idSelektovaneTeme,
+			dataType:"json"
+		})
+		.done(function(data, status){
+			
+			$("#izmena-naslov").val(data.naslov);
+			$("input[name=tipTeme]:checked").val(data.opis);
+			$("#izmena-sadrzaj").val(data.sadrzaj);
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	$("#btn-dodaj-tema").on("click", function(e){
+
+		var tema = {
+			naslov: $("#nova-naslov").val(),
+			tipTeme: $('input[name=tipTeme]:checked').val(),
+			sadrzaj: $("#nova-sadrzaj").val()
+		}
+
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"POST",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme",
+			dataType:"json",
+			data: JSON.stringify(tema)
+
+		})
+		.done(function(data){
+			$("#table-teme").append("<tr><td style='display:none'>" + data.id + "</td><td><a href='#' >" + data.naslov + "</a></td><td>" + data.tipTeme + "</td><td>" + data.autor + "</td><td>" + data.datumKreiranja + "</td></tr>");
+		})
+		.fail(function(jqXHR){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	$("body").on("click", ".tema-link", function(e){
+
+		idIzabraneTeme = $(this).parent().siblings(":first").text();
+
+		$(".prazna-tabela").removeClass("prazna-tabela");
+
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idIzabraneTeme,
+			dataType:"json"
+		})
+		.done(function(data, status){
+
+			$("#table-tema").find("tr").remove();
+			$("#table-komentari").find("tr").remove();
+
+			$("#table-tema").append("<tr><td rowspan='4' style='display:none;'>" + data.id + "<th colspan='2' class='naslov-tema'>" + data.naslov + "</td></tr><tr><td>Autor: " + data.autor + "</td><td>Kreirana: " + data.datumKreiranja + "</td></tr>" + "<tr><td colspan='2'><textarea cols='45' rows='5' readonly>" + data.sadrzaj + "</textarea></td></tr><tr><td><a href='#' class='like-tema'>Like </a>" + data.likes + "</td><td><a href='#' class='dislike-tema'>Dislike </a>" + data.dislikes + "</td></tr>");
+
+				loadKomentari(idIzabraneTeme);
+
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	function loadSveTeme(){
+
+		$("#table-teme").find("tr").remove();
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme",
+			dataType:"json"
+		})
+		.done(function(data, status){
+
+
+			$("#header-sve-teme").html("Teme podforuma: " + data[0].parentPodforum.naziv);
+
+			for (var i = data.length - 1; i >= 0; i--) {
+				$("#table-teme").append("<tr><td style='display:none;'>" + data[i].id + "</td><td><a href='#' class='tema-link'>" + data[i].naslov + "</a></td><td>" + data[i].tipTeme + "</td><td>" + data[i].autor + "</td><td>" + data[i].datumKreiranja + "</td></tr>");
+			}
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	}
+
+	$("body").on("click", "#btn-posalji", function(e){
+
+		var komentar = {
+			tekstKomentara: $("#text-komentar").val()
+		}
+
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"POST",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + idIzabraneTeme + "/komentari",
+			dataType:"json",
+			data: JSON.stringify(komentar)
+
+		})
+		.done(function(data, status){
+			loadKomentari(idIzabraneTeme);
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	});
+
+	function loadKomentari(id){
+		$.ajax({
+			headers:{
+				"Authorization":"Bearer " + sessionStorage.getItem("token"),
+				"Content-Type":"application/json"
+			},
+			type:"GET",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + id + "/komentari",
+			dataType:"json"
+
+		})
+		.done(function(data, status){
+
+			$("#table-komentari").find("tr").remove();
+
+			$("#table-komentari").append("<tr><th colspan='4'>Komentari</th></tr>");
+			for (var i = 0; i < data.length; i++) {
+				$("#table-komentari").append("<tr><td rowspan='2' style='display:none;'>" + data[i].id +"</td><td colspan='4'>" + data[i].tekstKomentara + "</td></tr><tr><td>" + data[i].autor.username + "</td><td>" + data[i].datumKomentara + "</td><td><a href='#' class='like-komentar'>Like </a>" + data[i].likes + "</td><td><a href='#' class='dislike-komentar'>Dislike </a>" + data[i].dislikes + "</td></tr>");  
+			}
+
+			loadTextArea();
+			
+		})
+		.fail(function(jqXHR, textStatus){
+			alert("error");
+			console.log(jqXHR);
+		});
+	}
+
+	function loadTextArea(){
+		$("#table-komentari").append("<tr><td colspan='4'><textarea id='text-komentar' rows='4' cols='45'></textarea></td></tr><tr><td colspan='4'><button id='btn-posalji'>Posalji</button></td></tr>");
+	}
+
+	function checkIfLoggedIn(){
+		var role = sessionStorage.getItem("role");
+		// ako nije ulogovan
+		if(sessionStorage.getItem('token') === null || sessionStorage.getItem('token') == "") {
+			$('.logged-out').removeClass('hide');
+			$('.logged-in').addClass('hide');
+		}
+		else {
+			if (role == "ADMIN") {
+				$(".admin").removeClass("hide");
+			}
+			else if (role == "MODERATOR") {
+				$(".moderator").removeClass("hide");
+			}
+		}
+	}
+
+	$(".selectable tbody").on("click", "tr", function(){
+		$(".selected").removeClass("selected");
+		$(this).addClass("selected");
+
+		idSelektovaneTeme = $(this).find("td").eq(0).html();
+		console.log(idSelektovaneTeme);
+		
+	});
+});
+</script>
+</html>

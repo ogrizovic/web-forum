@@ -2,6 +2,8 @@ package webprog.forum.auth;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.ws.rs.Consumes;
@@ -10,6 +12,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.Gson;
 
 import webprog.forum.model.User;
 import webprog.forum.service.UserService;
@@ -19,6 +25,7 @@ public class AuthenticationEndpoint {
 
 	private UserService userService;
 	private AuthenticationService authService;
+	private User loggedUser;
 	
 	public AuthenticationEndpoint() {
 		this.userService = new UserService();
@@ -37,12 +44,18 @@ public class AuthenticationEndpoint {
 
             // Issue a token for the user
             String token = issueToken(credentials.getUsername());
-
+            
             // Return the token on the response
-            return Response.ok(token).build();
+            StringBuilder userToken = new StringBuilder();
+            userToken.append(credentials.getUsername());
+            userToken.append(" ");
+            userToken.append(token);
+            userToken.append(" ");
+            userToken.append(loggedUser.getUloga());
+            return Response.ok(userToken).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }      
     }
 
@@ -50,6 +63,7 @@ public class AuthenticationEndpoint {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
     	User user = userService.getOneById(username);
+    	loggedUser = user;
     	if (user != null) {
     		if (password.equals(user.getPassword())) {
     			return;

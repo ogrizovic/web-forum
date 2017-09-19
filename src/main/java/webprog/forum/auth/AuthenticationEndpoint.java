@@ -2,8 +2,6 @@ package webprog.forum.auth;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import javax.ws.rs.Consumes;
@@ -12,10 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.google.gson.Gson;
 
 import webprog.forum.model.User;
 import webprog.forum.service.UserService;

@@ -16,7 +16,7 @@ public class PodforumRepo extends DefaultCrudRepo<Podforum> {
 	public PodforumRepo() {
 		super();
 		setMapType(new TypeToken<Map<String, Podforum>>() {}.getType());
-		setPath("src/main/resources/repository/podforumi.json");
+		setPath(getPath() + "/podforumi.json");
 	}
 	
 	@SuppressWarnings("unchecked")

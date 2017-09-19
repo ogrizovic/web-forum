@@ -16,7 +16,7 @@ public class AuthenticationService extends DefaultCrudRepo<UserToken>{
 	public AuthenticationService() {
 		super();
 		setMapType(new TypeToken<Map<String, UserToken>>() {}.getType());
-		setPath("src/main/resources/repository/tokens.json");
+		setPath(getPath() + "/tokens.json");
 	}
 	
 	@SuppressWarnings("unchecked")

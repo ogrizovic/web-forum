@@ -17,7 +17,7 @@ public class TemaRepo extends DefaultCrudRepo<Tema> {
 	public TemaRepo() {
 		super();
 		setMapType(new TypeToken<Map<String, Tema>>() {}.getType());
-		setPath("src/main/resources/repository/teme.json");
+		setPath(getPath() + "/teme.json");
 	}
 	
 	@SuppressWarnings("unchecked")

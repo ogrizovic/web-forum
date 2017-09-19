@@ -21,10 +21,11 @@ public abstract class DefaultCrudRepo<T extends IDInterface> implements CrudRepo
 	private Map<String, T> objectsMap;
 	private Type mapType;
 	private String path;
-	
+	private static String homeDirectory = System.getProperty("user.home");
 	
 	public DefaultCrudRepo() {
 		this.gson = new GsonBuilder().setPrettyPrinting().create(); 
+		setPath(getHomeDirectory() + "/milanforum");
 	}
 	
 	public void saveMap(String path) {
@@ -136,5 +137,13 @@ public abstract class DefaultCrudRepo<T extends IDInterface> implements CrudRepo
 
 	public void setObjectsMap(Map<String, T> objectsMap) {
 		this.objectsMap = objectsMap;
+	}
+
+	public static String getHomeDirectory() {
+		return homeDirectory;
+	}
+
+	public static void setHomeDirectory(String homeDirectory) {
+		DefaultCrudRepo.homeDirectory = homeDirectory;
 	}
 }

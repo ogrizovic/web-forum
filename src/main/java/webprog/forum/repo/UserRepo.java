@@ -16,7 +16,7 @@ public class UserRepo extends DefaultCrudRepo<User>{
 	public UserRepo() {
 		super();
 		setMapType(new TypeToken<Map<String, User>>() {}.getType());
-		setPath("src/main/resources/repository/users.json");
+		setPath(getPath() + "/users.json");
 	}
 	
 

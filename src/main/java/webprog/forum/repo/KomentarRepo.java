@@ -5,9 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
@@ -19,7 +17,7 @@ public class KomentarRepo extends DefaultCrudRepo<Komentar> {
 	public KomentarRepo() {
 		super();
 		setMapType(new TypeToken<Map<String, Komentar>>() {}.getType());
-		setPath("src/main/resources/repository/komentari.json");
+		setPath(getPath() + "/komentari.json");
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,5 +1,7 @@
 package webprog.forum.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -19,6 +21,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
+
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import webprog.forum.auth.Role;
 import webprog.forum.auth.Secured;
@@ -43,6 +49,34 @@ public class TemaCtrl {
 		this.podforumService = new PodforumService();
 		this.userService = new UserService();
 		this.komentarService = new KomentarService();
+	}
+	
+	@Secured
+	@POST
+	@Path("{id}/upload")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response uploadImage(@FormDataParam("file") InputStream uploadedInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam(value="id") String id) {
+		
+		byte[] bytes = new byte[3072];
+		
+		try {
+			bytes = IOUtils.toByteArray(uploadedInputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Tema tema = service.getOneById(id);
+		tema.setSadrzajSlika(bytes);
+		service.edit(tema, tema.getId());
+		
+//		@SuppressWarnings("static-access")
+//		String uploadedFileLocation = service.getRepo().getHomeDirectory() + "/milanforum/" + fileDetail.getFileName();
+//		
+//		service.saveImage(uploadedInputStream, uploadedFileLocation);
+		
+		return Response.ok(service.getOneById(id)).build();
 	}
 	
 	@Secured
@@ -99,6 +133,7 @@ public class TemaCtrl {
 		tema.setDislikes(0);
 		tema.setKomentari(new ArrayList<String>());
 		tema.setVotes(new ArrayList<String>());
+		tema.setSadrzajSlika(new byte[3072]);
 		
 		User autor = (userService.getOneById(username));
 		autor.getTeme().add(tema);

@@ -17,6 +17,31 @@
 	<div id="div-sve-teme">
 		<h2 id="header-sve-teme"></h2>
 		<br/>
+
+		<label>Filter:</label>
+		<ul>
+			<li>
+				<label>Naslov</label>
+				<input type="text" id="s_naslov" class="search" />
+			</li>
+			<li>
+				<label>Sadrzaj</label>
+				<input type="text" id="s_sadrzaj" class="search" />
+			</li>
+			<li>
+				<label>Autor</label>
+				<input type="text" id="s_autor" class="search" />
+			</li>
+			<li>
+				<label>Tip teme</label>
+				<input type="text" id="s_tip" class="search" />
+			</li>
+			<li>
+				<button type="button" id="btn-reset-filters">Reset filter</button>
+			</li>
+		</ul>
+
+		<br/>
 		<button type="button" class="user" id="btn-prati">Prati podforum</button>
 		<br/>
 		<table id="table-teme" class="table-teme-class selectable">
@@ -28,7 +53,7 @@
 			</tr>
 		</table>
 		<!-- Modal buttons -->
-		<button type="button" class="user" data-toggle="modal" data-target="#modal-nova-tema" id="nova-tema">Nova tema</button>
+		<button type="button" class="user admin moderator" data-toggle="modal" data-target="#modal-nova-tema" id="nova-tema">Nova tema</button>
 		<button type="button" class="user moderator admin hide" data-toggle="modal" data-target="#modal-izmena-tema" id="btn-izmena-tema">Izmena</button>
 		<button type="button" class="user moderator admin hide" data-toggle="modal" data-target="#modal-brisanje-tema" id="btn-brisanje-tema">Brisanje</button>
 	</div>
@@ -72,8 +97,8 @@
 		        		<label>Tip teme:</label>
 		        	</td>
 		        	<td>
-		        		<input type="radio" name="tipTeme" value="TEKST">Tekst<br>
-		        		<input type="radio" name="tipTeme" value="SLIKA">Slika<br>
+		        		<input type="radio" name="tipTeme" value="TEKST" id="radio-tekst" checked>Tekst<br>
+		        		<input type="radio" name="tipTeme" value="SLIKA" id="radio-slika">Slika<br>
 		        		<input type="radio" name="tipTeme" value="LINK">Link
 		        	</td>
 	        	</tr>
@@ -83,6 +108,7 @@
 		        	</td>
 		        	<td>
 		        		<textarea rows='5' cols='35' name="sadrzaj" id="nova-sadrzaj"></textarea>
+		        		<input type="file" name="file" id="nova-sadrzaj-slika" class="hide" accept=".jpg, .jpeg, .png"/>
 		        	</td>
 	        	</tr>
 	        </form>
@@ -183,10 +209,55 @@ $(document).ready(function(e){
 
 	checkIfLoggedIn();
 	loadSveTeme();
+	// search();
+
+	$("#btn-reset-filters").on("click", function(e){
+		loadSveTeme();
+		$("#s_naslov").val("");
+		$("#s_sadrzaj").val("");
+		$("#s_autor").val("");
+		$("#s_podforum").val("");
+		$("#s_tip").val("");
+	})
+
+	$(".search").on("keyup change", function(e){
+		search();
+	});
+
+	function search() {
+		$("#table-teme").find("tr").remove();
+		var s_naslov = $("#s_naslov").val();
+		var s_sadrzaj = $("#s_sadrzaj").val();
+		var s_autor = $("#s_autor").val();
+		var s_podforum = $("#s_podforum").val();
+		var s_tip = $("#s_tip").val();
+
+		$.get("http://localhost:8080/forum/webapi/search", {s_naslov, s_sadrzaj, s_autor, s_tip}, function(data){
+			console.log(data);
+			for (var i = 0; i < data.length; i++) {
+				$("#table-teme").append("<tr><td style='display:none'>" + data[i].id + "</td><td><a href='#' >" + data[i].naslov + "</a></td><td>" + data[i].tipTeme + "</td><td>" + data[i].autor + "</td><td>" + data[i].datumKreiranja + "</td></tr>");
+			}
+		});
+	}
+
+	$("#modal-nova-tema").on("shown.bs.modal", function(data){
+	
+		$("#radio-slika").on("click", function(data){
+			$("#nova-sadrzaj").addClass("hide");
+			$("#nova-sadrzaj-slika").removeClass("hide");
+		});
+		
+		$("#radio-tekst").on("click", function(data){
+			$("#nova-sadrzaj").removeClass("hide");
+			$("#nova-sadrzaj-slika").addClass("hide");
+
+		});
+	});
 
 	$("body").on("click", ".like-tema", function(e){
+
 		var idLajkovaneTeme = $(this).parent().parent().siblings(":first").children(":first").text();
-		alert(idIzabraneTeme + ", " + idLajkovaneTeme);
+
 		$.ajax({
 			headers:{
 				"Authorization": "Bearer " + sessionStorage.getItem("token"),
@@ -200,14 +271,18 @@ $(document).ready(function(e){
 
 		})
 		.fail(function(jqXHR){
-			alert("error");
-			console.log(jqXHR);
+			if (jqXHR.status == 401) {
+				alert("Niste prijavljeni.")
+			} else {
+				alert("error");
+				console.log(jqXHR);
+			}
 		});
 	});
 
 	$("body").on("click", ".dislike-tema", function(e){
 		var idLajkovaneTeme = $(this).parent().parent().siblings(":first").children(":first").text();
-		alert(idIzabraneTeme + ", " + idLajkovaneTeme);
+
 		$.ajax({
 			headers:{
 				"Authorization": "Bearer " + sessionStorage.getItem("token"),
@@ -221,8 +296,13 @@ $(document).ready(function(e){
 
 		})
 		.fail(function(jqXHR){
-			alert("error");
-			console.log(jqXHR);
+			if (jqXHR.status == 401) {
+				alert("Niste prijavljeni.")
+			} else {
+				alert("error");
+				console.log(jqXHR);
+			}
+
 		});
 	});
 
@@ -233,12 +313,17 @@ $(document).ready(function(e){
 				"Content-Type":"application/json"
 			},
 			type:"GET",
-			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/prati",
+			url:"http://localhost:8080/forum/webapi/users/" + sessionStorage.getItem("username") + "/prati?podforumId" + podforumId,
 			dataType:"json"
 		})
 		.fail(function(jqXHR){
-			alert("error");
-			console.log(jqXHR);
+			if (jqXHR.status == 401) {
+				alert("Niste prijavljeni.")
+			} else {
+				alert("error");
+				console.log(jqXHR);
+			}
+
 		});
 	});
 
@@ -318,30 +403,100 @@ $(document).ready(function(e){
 
 	$("#btn-dodaj-tema").on("click", function(e){
 
-		var tema = {
-			naslov: $("#nova-naslov").val(),
-			tipTeme: $('input[name=tipTeme]:checked').val(),
-			sadrzaj: $("#nova-sadrzaj").val()
+		if ($("#radio-tekst").is(":checked")) {
+			var tema = {
+				naslov: $("#nova-naslov").val(),
+				tipTeme: $('input[name=tipTeme]:checked').val(),
+				sadrzaj: $("#nova-sadrzaj").val()
+			}
+
+			$.ajax({
+				headers:{
+					"Authorization":"Bearer " + sessionStorage.getItem("token"),
+					"Content-Type":"application/json"
+				},
+				type:"POST",
+				url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme",
+				dataType:"json",
+				data: JSON.stringify(tema)
+
+			})
+			.done(function(data){
+				$("#table-teme").append("<tr><td style='display:none'>" + data.id + "</td><td><a href='#' >" + data.naslov + "</a></td><td>" + data.tipTeme + "</td><td>" + data.autor + "</td><td>" + data.datumKreiranja + "</td></tr>");
+			})
+			.fail(function(jqXHR, textStatus){
+				if (jqXHR.status == 409) {
+					alert("Vec postoji tema sa navedenim imenom.")
+				} else {
+					if (jqXHR.status == 401) {
+						alert("error");
+						console.log(jqXHR);
+					}
+				}
+			});
+
+		} else {
+			if ($("#radio-slika").is(":checked")) {
+				var tema = {
+					naslov: $("#nova-naslov").val(),
+					tipTeme: $('input[name=tipTeme]:checked').val(),
+					sadrzaj: ""
+				}
+
+				$.ajax({
+					headers:{
+						"Authorization":"Bearer " + sessionStorage.getItem("token"),
+						"Content-Type":"application/json"
+					},
+					type:"POST",
+					url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme",
+					dataType:"json",
+					data: JSON.stringify(tema)
+
+				})
+				.done(function(data){
+					
+					var input = $("#nova-sadrzaj-slika").val();
+					var fd = new FormData();
+					fd.append("file", input);
+					
+					$.ajax({
+						headers:{
+							"Authorization":"Bearer " + sessionStorage.getItem("token")
+						},
+						type:"POST",
+						enctype:"multipart/form-data",
+						url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + data.id + "/upload",
+						data:fd,
+						processData:false,
+						contentType:false,
+
+
+					})
+					.done(function(data){
+						$("#table-teme").append("<tr><td style='display:none'>" + data.id + "</td><td><a href='#' >" + data.naslov + "</a></td><td>" + data.tipTeme + "</td><td>" + data.autor + "</td><td>" + data.datumKreiranja + "</td></tr>");
+					})
+					.fail(function(jqXHR){
+						alert("error");
+						console.log(jqXHR);
+					});
+
+				})
+				.fail(function(jqXHR){
+					if (jqXHR.status == 409) {
+						alert("Vec postoji tema sa navedenim imenom.")
+					} else {
+						if (jqXHR.status == 401) {
+							alert("Niste prijavljeni.");
+							
+						} else {
+							alert("error");
+							console.log(jqXHR);
+						}
+				}
+				});
+			}
 		}
-
-		$.ajax({
-			headers:{
-				"Authorization":"Bearer " + sessionStorage.getItem("token"),
-				"Content-Type":"application/json"
-			},
-			type:"POST",
-			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme",
-			dataType:"json",
-			data: JSON.stringify(tema)
-
-		})
-		.done(function(data){
-			$("#table-teme").append("<tr><td style='display:none'>" + data.id + "</td><td><a href='#' >" + data.naslov + "</a></td><td>" + data.tipTeme + "</td><td>" + data.autor + "</td><td>" + data.datumKreiranja + "</td></tr>");
-		})
-		.fail(function(jqXHR){
-			alert("error");
-			console.log(jqXHR);
-		});
 	});
 
 	$("body").on("click", ".tema-link", function(e){
@@ -364,10 +519,25 @@ $(document).ready(function(e){
 			$("#table-tema").find("tr").remove();
 			$("#table-komentari").find("tr").remove();
 
-			$("#table-tema").append("<tr><td rowspan='4' style='display:none;'>" + data.id + "<th colspan='2' class='naslov-tema'>" + data.naslov + "</td></tr><tr><td>Autor: " + data.autor + "</td><td>Kreirana: " + data.datumKreiranja + "</td></tr>" + "<tr><td colspan='2'><textarea cols='45' rows='5' readonly>" + data.sadrzaj + "</textarea></td></tr><tr><td><a href='#' class='like-tema'>Like </a>" + data.likes + "</td><td><a href='#' class='dislike-tema'>Dislike </a>" + data.dislikes + "</td></tr>");
+			if (data.tipTeme == "TEKST") {
 
-				loadKomentari(idIzabraneTeme);
+				$("#table-tema").append("<tr><td rowspan='4' style='display:none;'>" + data.id + "<th colspan='2' class='naslov-tema'>" + data.naslov + "</td></tr><tr><td>Autor: " + data.autor + "</td><td>Kreirana: " + data.datumKreiranja + "</td></tr>" + "<tr><td colspan='2'><textarea cols='45' rows='5' readonly>" + data.sadrzaj + "</textarea></td></tr><tr><td><a href='#' class='like-tema'>Like </a>" + data.likes + "</td><td><a href='#' class='dislike-tema'>Dislike </a>" + data.dislikes + "</td></tr>");
 
+					loadKomentari(idIzabraneTeme);
+					
+			} else {
+				if (data.tipTeme == "SLIKA") {
+					console.log(data.sadrzajSlika);
+					$("#table-tema").append("<tr><td rowspan='4' style='display:none;'>" + data.id + "<th colspan='2' class='naslov-tema'>" + data.naslov + "</td></tr><tr><td>Autor: " + data.autor + "</td><td>Kreirana: " + data.datumKreiranja + "</td></tr>" + "<tr><td colspan='2'><img id='slika' src='data:image/jpg;base64,"+ data.sadrzajSlika + "'  /></td></tr><tr><td><a href='#' class='like-tema'>Like </a>" + data.likes + "</td><td><a href='#' class='dislike-tema'>Dislike </a>" + data.dislikes + "</td></tr>");
+
+					loadKomentari(idIzabraneTeme);
+				}
+			}
+
+				// var c = $("#canvas").get(0);
+				// var ctx = c.getContext("2d");
+				// var img = $("#slika");
+				// ctx.drawImage(img, 10, 10);
 		})
 		.fail(function(jqXHR, textStatus){
 			alert("error");
@@ -389,11 +559,16 @@ $(document).ready(function(e){
 		})
 		.done(function(data, status){
 
+			if (data[0] === undefined) {
 
-			$("#header-sve-teme").html("Teme podforuma: " + data[0].parentPodforum.naziv);
+				$("#header-sve-teme").html("Podforum nema tema.");	
 
-			for (var i = data.length - 1; i >= 0; i--) {
-				$("#table-teme").append("<tr><td style='display:none;'>" + data[i].id + "</td><td><a href='#' class='tema-link'>" + data[i].naslov + "</a></td><td>" + data[i].tipTeme + "</td><td>" + data[i].autor + "</td><td>" + data[i].datumKreiranja + "</td></tr>");
+			} else {
+
+				$("#header-sve-teme").html("Teme podforuma: " + data[0].parentPodforum.naziv);
+			}
+			for (var i = 0; i < data.length; i++) {
+				$("#table-teme").append("<tr><td style='display:none;'>" + data[i].id + "</td><td><a href='#' class='tema-link'>" + data[i].naslov + "</a></td><td>" + data[i].tipTeme + "</td><td><a href='/'" + data[i].autor + "</td><td>" + data[i].datumKreiranja + "</td></tr>");
 			}
 		})
 		.fail(function(jqXHR, textStatus){
@@ -428,14 +603,14 @@ $(document).ready(function(e){
 		});
 	});
 
-	function loadKomentari(id){
+	function loadKomentari(temaId){
 		$.ajax({
 			headers:{
 				"Authorization":"Bearer " + sessionStorage.getItem("token"),
 				"Content-Type":"application/json"
 			},
 			type:"GET",
-			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + id + "/komentari",
+			url:"http://localhost:8080/forum/webapi/podforumi/" + podforumId + "/teme/" + temaId + "/komentari",
 			dataType:"json"
 
 		})
@@ -469,11 +644,18 @@ $(document).ready(function(e){
 			$('.logged-in').addClass('hide');
 		}
 		else {
-			if (role == "ADMIN") {
-				$(".admin").removeClass("hide");
+			if (role == "USER") {
+				$(".user").removeClass("hide");
 			}
-			else if (role == "MODERATOR") {
-				$(".moderator").removeClass("hide");
+			else {
+					if (role == "MODERATOR") {
+					$(".moderator").removeClass("hide");
+				}
+				else {
+					if (role == "ADMIN") {
+						$(".admin").removeClass("hide");
+					}
+				}
 			}
 		}
 	}

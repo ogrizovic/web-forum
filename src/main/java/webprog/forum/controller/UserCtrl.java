@@ -15,6 +15,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
@@ -47,9 +48,22 @@ public class UserCtrl {
 		this.temaService = new TemaService();
 	}
 	
+	@Secured
+	@GET
+	@Path("{username}/prati")
+	public Response pratiPodforum(@PathParam(value="username") String username,
+			@QueryParam("podforumId") String podforumId) {
+		
+		User user = service.getOneById(username);
+		user.getPraceniPodforumi().add(podforumId);
+		service.edit(user, username);
+		
+		return Response.ok(user).build();
+	}
+	
 	@GET
 	@Path("{userId}/praceneTeme")
-	@Produces(MediaType.TEXT_PLAIN)	
+	@Produces(MediaType.APPLICATION_JSON)	
 	public Response praceneTeme(@PathParam(value="userId") String userId) {
 		User user = service.getOneById(userId);
 		Map<String, Tema> praceneTeme = new HashMap<>();
@@ -123,12 +137,13 @@ public class UserCtrl {
 	@Path("{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(@PathParam(value = "username") String username, User user) {
+	public Response edit(@PathParam(value = "username") String username, 
+			@QueryParam("mod") String mod) {
 		User tmp = service.getOneById(username);
 		if (tmp == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		tmp.setUloga(user.getUloga());
+		tmp.setUloga(Role.MODERATOR);
 		tmp = service.edit(tmp, tmp.getId());
 		return Response.ok(tmp).build();
 	}

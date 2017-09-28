@@ -33,13 +33,16 @@
 	</table>
 	<br>
 	<table id="table-podforumi" class="selectable preview-podforumi" border="1">
-		<th colspan="2">Svi Podforumi</th>
+		<tr>
+			<th colspan="2">Svi Podforumi</th>
+			<th>MOD</th>
+		</tr>	
 	</table>
 
 
 <!-- Novi podforum modal button-->
 <!-- Trigger the modal with a button -->
-<button type="button" class="admin hide" data-toggle="modal" data-target="#modal-novi-podforum">Novi</button>
+<button type="button" class="admin moderator hide" data-toggle="modal" data-target="#modal-novi-podforum">Novi</button>
 <!-- Novi podforum modal -->
 <!-- Modal -->
 <div id="modal-novi-podforum" class="modal fade" role="dialog">
@@ -92,7 +95,7 @@
 
 <!-- Izmena podforum modal button-->
 <!-- Trigger the modal with a button -->
-<button type="button" class="admin hide" data-toggle="modal" data-target="#modal-izmena-podforum" id="btn-izmena-podforum">Izmena</button>
+<button type="button" class="admin moderator hide" data-toggle="modal" data-target="#modal-izmena-podforum" id="btn-izmena-podforum">Izmena</button>
 <div id="modal-izmena-podforum" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -142,7 +145,7 @@
 </div>
 
 <!-- Brisanje podforum modal button-->
-<button type="button" class="admin hide" data-toggle="modal" data-target="#modal-brisanje-podforum" id="btn-brisanje-podforum">Brisanje</button>
+<button type="button" class="admin moderator hide" data-toggle="modal" data-target="#modal-brisanje-podforum" id="btn-brisanje-podforum">Brisanje</button>
 <!-- Izmena podforuma modal -->
 <!-- Modal -->
 <div id="modal-brisanje-podforum" class="modal fade" role="dialog">
@@ -304,7 +307,7 @@ $(document).ready(function(e){
 			data: jsonData
 		})
 		.done(function(data, status){
-			$("#table-podforumi").append('<tr><td style="display:none;">' + data.id + '</td><td><img alt="image" height="100" width="100" />' + data.ikonica + '</td><td><a href="#" class="podforum-link">' + data.naziv + '</a></td></tr>');
+			$("#table-podforumi").append('<tr><td style="display:none;">' + data.id + '</td><td><img alt="image" height="100" width="100" />' + data.ikonica + '</td><td><a href="#" class="podforum-link">' + data.naziv + '</a></td><td>' + data.odgovorniModerator.username + '</tr>');
 
 
 		})
@@ -344,11 +347,18 @@ $(document).ready(function(e){
 			$('.logged-in').addClass('hide');
 		}
 		else {
-			if (role == "ADMIN") {
-				$(".admin").removeClass("hide");
+			if (role == "USER") {
+				$(".user").removeClass("hide");
 			}
-			else if (role == "MODERATOR") {
-				$(".moderator").removeClass("hide");
+			else {
+					if (role == "MODERATOR") {
+					$(".moderator").removeClass("hide");
+				}
+				else {
+					if (role == "ADMIN") {
+						$(".admin").removeClass("hide");
+					}
+				}
 			}
 		}
 	}
@@ -377,7 +387,7 @@ $(document).ready(function(e){
 			$("#table-podforumi").find("tr:gt(0)").remove();
 
 			for (var i = data.length - 1; i >= 0; i--) {
-				$('#table-podforumi').append('<tr><td style="display:none;">' + data[i].id + '</td><td><img src="" alt="image" height="100" width="100" />' + data[i].ikonica + '<td><a href="#" class="podforum-link">' + data[i].naziv + '</a></td></tr>');
+				$('#table-podforumi').append('<tr><td style="display:none;">' + data[i].id + '</td><td><img src="" alt="image" height="100" width="100" />' + data[i].ikonica + '</td><td><a href="#" class="podforum-link">' + data[i].naziv + '</a></td><td>' + data[i].odgovorniModerator.username + '</td></tr>');
 			}
 		})
 		.fail(function(jqXHR, textStatus){

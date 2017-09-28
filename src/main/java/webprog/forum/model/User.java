@@ -91,7 +91,7 @@ public class User implements IDInterface {
 	}
 
 	public Date getDatumRegistracijeAsDate() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			return dateFormat.parse(datumRegistracije);
 		} catch (ParseException e) {

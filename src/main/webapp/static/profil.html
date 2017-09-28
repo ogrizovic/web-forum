@@ -3,11 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <script src="/forum/js/jquery-3.2.1.min.js"></script>
+<style>
+	ul {
+    list-style-type: none;
+    padding: 0;
+    border: 1px solid #ddd;
+    width: 300px;
+}
+
+ul li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd;
+    
+}
+
+ul li:last-child {
+    border-bottom: none
+}
+
+.hide {
+	display: none;
+}
+</style>
 <title>Profil</title>
 </head>
 <body>
 	<h2 id="naslov"></h2>
 	<a href="http://localhost:8080/forum">Pocetna</a>
+	<a href="#" id="link-proglasi-za-moda" class="admin hide">Proglasi za moderatora</a>
 	<h3>Podaci</h3>
 	<ul id="podaci"></ul>
 	<h3>Praceni podforumi</h3>
@@ -22,7 +45,33 @@ $(document).ready(function(){
 	var ime, prezime, telefon, email, datumRegistracije,praceniPodforumi, teme, komentari;
 	var username = sessionStorage.getItem("username");
 
+	checkIfLoggedIn();
 	loadPodaci();
+
+	$("#link-proglasi-za-moda").on("click", function(e){
+		$.ajax({
+			headers:{
+				"Authorization": sessionStorage.getItem("role"),
+				"Content-Type":"application/json"
+			},
+			type:"PUT",
+			url:"http://localhost:8080/forum/webapi/users/" + username + "?mod=mod",
+			dataType:"json"
+
+		})
+		.done(function(data){
+
+		})
+		.fail(function(jqXHR){
+			if (jqXHR.status == 401) {
+				alert("Unauthorized.");
+				
+			} else {
+				alert("error");
+				console.log(jqXHR);
+			}
+		});
+	})
 
 	function loadPodaci(){
 		$.ajax({
@@ -36,7 +85,7 @@ $(document).ready(function(){
 		})
 		.done(function(data, status){
 			$("#naslov").append("Profil korisnika: " + data.username);
-			$("#podaci").append("<li>Ime i prezime: " + data.ime + " " + data.prezime + "</li><li>Tel: " + data.telefon + "</li><li>Email: " + data.email + "</li><li>Registrovan: " + data.datumRegistracije + "</li>");
+			$("#podaci").append("<li>Ime i prezime: " + data.ime + " " + data.prezime + "</li><li>Tel: " + data.telefon + "</li><li>Email: " + data.email + "</li><li>Registrovan: " + data.datumRegistracije + "</li><li>" + data.uloga + "</li>");
 			for (var i = data.praceniPodforumi.length - 1; i >= 0; i--) {
 				$("#praceni-podforumi").append("<li>" + data.praceniPodforumi[i].naziv + "</li>");
 			}
@@ -59,6 +108,30 @@ $(document).ready(function(){
 			alert("error");
 			console.log(jqXHR);
 		});
+	}
+
+	function checkIfLoggedIn(){
+		var role = sessionStorage.getItem("role");
+		// ako nije ulogovan
+		if(sessionStorage.getItem('token') === null || sessionStorage.getItem('token') == "") {
+			$('.logged-out').removeClass('hide');
+			$('.logged-in').addClass('hide');
+		}
+		else {
+			if (role == "USER") {
+				$(".user").removeClass("hide");
+			}
+			else {
+					if (role == "MODERATOR") {
+					$(".moderator").removeClass("hide");
+				}
+				else {
+					if (role == "ADMIN") {
+						$(".admin").removeClass("hide");
+					}
+				}
+			}
+		}
 	}
 });
 </script>

@@ -20,6 +20,7 @@ public class Tema implements IDInterface {
 	private int likes;
 	private int dislikes;
 	private List<String> votes; // oni koji su lajkovali/dislajkovali
+	private byte[] sadrzajSlika;
 	
 	public Tema() {
 	}
@@ -144,6 +145,14 @@ public class Tema implements IDInterface {
 
 	public void setVotes(ArrayList<String> arrayList) {
 		this.votes = arrayList;
+	}
+
+	public byte[] getSadrzajSlika() {
+		return sadrzajSlika;
+	}
+
+	public void setSadrzajSlika(byte[] sadrzajSlika) {
+		this.sadrzajSlika = sadrzajSlika;
 	}
 
 	

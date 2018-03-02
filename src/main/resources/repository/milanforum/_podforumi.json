@@ -1,0 +1,71 @@
+{
+  "1": {
+    "id": "1",
+    "naziv": "Podforum 123",
+    "opis": "Opis Podforuma 1",
+    "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+    "odgovorniModerator": {
+      "username": "admin",
+      "password": "a",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "123123",
+      "email": "admin@a.com",
+      "datumRegistracije": "17/34/2017",
+      "praceniPodforumi": [],
+      "teme": [],
+      "komentari": []
+    }
+  },
+  "2": {
+    "id": "2",
+    "naziv": "asdasds",
+    "opis": "asdsadd",
+    "pravila": "saddadaaaa",
+    "odgovorniModerator": {
+      "username": "admin",
+      "password": "a",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "123123",
+      "email": "admin@a.com",
+      "datumRegistracije": "17/34/2017",
+      "praceniPodforumi": [],
+      "teme": [
+        {
+          "id": "1",
+          "parentPodforum": {
+            "id": "1",
+            "naziv": "Podforum1",
+            "opis": "Opis Podforuma1",
+            "pravila": "Pravilo1: qwerty, Pravilo2: asdf",
+            "odgovorniModerator": {
+              "username": "admin",
+              "password": "a",
+              "ime": "Admin",
+              "prezime": "Adminovic",
+              "uloga": "ADMIN",
+              "telefon": "123123",
+              "email": "admin@a.com",
+              "datumRegistracije": "17/34/2017",
+              "praceniPodforumi": [],
+              "teme": [],
+              "komentari": []
+            }
+          },
+          "naslov": "Tema1",
+          "tipTeme": "TEKST",
+          "autor": "admin",
+          "komentari": [],
+          "sadrzaj": "Ovo je sadrzaj teme",
+          "datumKreiranja": "17/09/2017",
+          "likes": 0,
+          "dislikes": 0
+        }
+      ],
+      "komentari": []
+    }
+  }
+}

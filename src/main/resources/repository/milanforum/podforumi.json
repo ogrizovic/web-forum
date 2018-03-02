@@ -1,0 +1,40 @@
+{
+  "1": {
+    "id": "1",
+    "naziv": "Podforum 1",
+    "opis": "Prvi podforum",
+    "pravila": "Pravilo 1, Pravilo 2",
+    "odgovorniModerator": {
+      "username": "admin",
+      "password": "a",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "444444",
+      "email": "asd@asd.om",
+      "datumRegistracije": "20/57/2017",
+      "praceniPodforumi": [1, 2],
+      "teme": [],
+      "komentari": []
+    }
+  },
+  "2": {
+    "id": "2",
+    "naziv": "Podforum 2",
+    "opis": "Drugi podforum",
+    "pravila": "Pravilo 1, Pravilo 2",
+    "odgovorniModerator": {
+      "username": "admin",
+      "password": "a",
+      "ime": "Admin",
+      "prezime": "Adminovic",
+      "uloga": "ADMIN",
+      "telefon": "444444",
+      "email": "asd@asd.om",
+      "datumRegistracije": "20/57/2017",
+      "praceniPodforumi": [1, 2],
+      "teme": [],
+      "komentari": []
+    }
+  }
+}
